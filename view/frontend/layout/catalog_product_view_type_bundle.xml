@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="page-product-bundle"/>
+        <referenceBlock name="product.info">
+            <block class="Magento\Catalog\Block\Product\View" name="bundle.summary" as="form_bottom"
+                   template="Magento_Bundle::catalog/product/view/summary.phtml">
+                <block class="Magento\Catalog\Block\Product\View" name="product.info.addtocart.bundle" as="addtocart"
+                       template="MageINIC_Quantity::addtocart.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+                    </arguments>
+                    <block class="Magento\Catalog\Block\ShortcutButtons\InCatalog" name="addtocart.shortcut.buttons"/>
+                </block>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="product.info.bundle.options.radio"
+                        template="MageINIC_Quantity::catalog/product/view/type/bundle/option/radio.phtml">
+            <arguments>
+                <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

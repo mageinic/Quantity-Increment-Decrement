@@ -1,0 +1,171 @@
+/**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+@plusminuswidth: 62px;
+.qty-controller-wrap {
+    //  display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    max-width: 200px;
+    width: 100%;
+}
+.qty-controller {
+    display: inline-block;
+    font-size: 0;
+    vertical-align: top;
+    width: 76%;
+    .minus,
+    .plus,
+    button {
+        border-radius: 3px;
+        display: inline-block;
+        vertical-align: top;
+        width: 28px;
+    }
+
+    button {
+        background: rgba(25,121,195,100);
+        border: 0 solid rgba(25,121,195,100);
+        box-shadow: none;
+        box-sizing: border-box;
+        color: rgba(255,255,255,100);
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        line-height: 1.6rem;
+        margin: 0;
+        padding: 8px 0;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .input-text.qty {
+        border-radius: 3px;
+        display: inline-block;
+        margin: 0 3px;
+        text-align: center;
+        vertical-align: top;
+        width: calc(~'100% - '@plusminuswidth);
+    }
+}
+
+.products-grid {
+    .product-config {
+        .action.tocart.primary {
+            width: 100%;
+        }
+    }
+}
+
+.product-info-main {
+    .product-add-form {
+        .qty-controller {
+            margin-left: 10px;
+            max-width: 140px;
+            vertical-align: middle;
+            width: max-content;
+        }
+    }
+}
+
+.cart.table-wrapper {
+    .col.qty {
+        .qty-controller {
+            .input-text {
+                height: 32px;
+                margin-top: 0;
+                width: 45px;
+            }
+        }
+    }
+}
+
+.minicart-items-wrapper {
+    .minicart-items {
+        .details-qty.qty {
+            .qty-controller {
+                margin-bottom: 5px;
+                width: 60%;
+                input.item-qty.cart-item-qty {
+                    margin: 0 3px;
+                }
+            }
+            .update-cart-item {
+                margin-left: 30px;
+            }
+        }
+    }
+}
+
+
+.box-tocart{
+    .fieldset{
+        .field{
+            &.qty{
+                .control{
+                    .qty-controller{
+                        width: 105%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.products-grid{
+    &.wishlist {
+        .product-item {
+            .fieldset {
+                .product-item-actions{
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .qty-controller {
+        width: 60%;
+    }
+}
+
+@media (max-width: 375px) {
+    .qty-controller {
+        width: 80%;
+    }
+}
+
+@media (max-width: 360px) {
+    .qty-controller {
+        width: 80%;
+    }
+}
+
+@media (max-width: 320px) {
+    .qty-controller {
+        width: 100%;
+    }
+}
+

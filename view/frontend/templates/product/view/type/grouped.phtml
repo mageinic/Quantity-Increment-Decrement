@@ -1,0 +1,157 @@
+<?php
+/**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+
+use Magento\Catalog\Pricing\Price\TierPrice;
+use Magento\Framework\Escaper;
+use Magento\GroupedProduct\Block\Product\View\Type\Grouped;
+use MageINIC\Quantity\ViewModel\Data;
+
+/**
+ * @var  Grouped $block
+ * @var $escaper Escaper
+ */
+
+$block->setPreconfiguredValue();
+$_product = $block->getProduct();
+$_associatedProducts = $block->getAssociatedProducts();
+$_hasAssociatedProducts = count($_associatedProducts) > 0;
+/** @var $viewModel Data */
+$viewModel = $block->getViewModel();
+$moduleCheck = $viewModel->getModuleEnable();
+$varClass = 'qty-change4';
+?>
+
+<div class="table-wrapper grouped">
+    <table class="table data grouped"
+           id="super-product-table"
+           data-mage-init='{ "Magento_GroupedProduct/js/product-ids-resolver": {} }'>
+        <caption class="table-caption"><?= $escaper->escapeHtml(__('Grouped product items')) ?></caption>
+        <thead>
+        <tr>
+            <th class="col item" scope="col"><?= $escaper->escapeHtml(__('Product Name')) ?></th>
+            <?php if ($_product->isSaleable()): ?>
+                <th class="col qty" scope="col"><?= $escaper->escapeHtml(__('Qty')) ?></th>
+            <?php endif; ?>
+        </tr>
+        </thead>
+        <?php if ($_hasAssociatedProducts): ?>
+            <tbody>
+            <?php foreach ($_associatedProducts as $_item): ?>
+                <tr>
+                    <td data-th="<?= $escaper->escapeHtml(__('Product Name')) ?>" class="col item">
+                        <strong class="product-item-name"><?= $escaper->escapeHtml($_item->getName()) ?></strong>
+                        <?php if ($block->getCanShowProductPrice($_product)): ?>
+                            <?php if ($block->getCanShowProductPrice($_item)): ?>
+                                <?= /* @noEscape */
+                                $block->getProductPrice($_item) ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
+                    <?php if ($_product->isSaleable()) { ?>
+                        <td data-th="<?= $escaper->escapeHtml(__('Qty')) ?>" class="col qty">
+                            <?php if ($_item->isSaleable()): ?>
+                                <div class="product-config">
+                                    <div class="product-configwrap">
+                                        <div class="qty-controller-wrap">
+                                            <div class="qty-controller">
+                                                <div class="field qty">
+                                                    <div class="<?= $escaper->escapeHtml(__($varClass)) ?>">
+                                                        <?php if ($moduleCheck): ?>
+                                                            <?php if ($_hasAssociatedProducts): ?>
+                                                                <button class="decrease-qty">&#45;</button>
+                                                            <?php endif; ?>
+                                                            <input type="number"
+                                                                   name="super_group[
+                                                                   <?= $escaper->escapeHtmlAttr($_item->getId()) ?>]"
+                                                                   data-selector="super_group[
+                                                                   <?= $escaper->escapeHtmlAttr($_item->getId()) ?>]"
+                                                                   value="1"
+                                                                   title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
+                                                                   id="qty-<?= $escaper->escapeHtml(__($_item->getId())) ?>"
+                                                                   class="input-text qty"
+                                                                   data-validate="{
+                                                                   'validate-grouped-qty':'#super-product-table'}"
+                                                                   data-errors-message-box="#validation-message-box"
+                                                            />
+                                                            <?php if ($_hasAssociatedProducts): ?>
+                                                                <button class="increase-qty">&#43;</button>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="stock unavailable"
+                                     title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>">
+                                    <span><?= $escaper->escapeHtml(__('Out of stock')) ?></span>
+                                </div>
+                            <?php endif; ?>
+                        </td>
+                    <?php } ?>
+                </tr>
+                <?php if ($block->getCanShowProductPrice($_product) && $block->getCanShowProductPrice($_item) && trim(
+                    $block->getProductPriceHtml($_item, TierPrice::PRICE_CODE)
+                )): ?>
+                    <tr class="row-tier-price">
+                        <td colspan="2">
+                            <?= $block->getProductPriceHtml($_item, TierPrice::PRICE_CODE) ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </tbody>
+        <?php else: ?>
+            <tbody>
+            <tr>
+                <td class="unavailable"
+                    colspan="<?php if ($_product->isSaleable()): ?>4<?php else: ?>3<?php endif; ?>">
+                    <?= $escaper->escapeHtml(__('No options of this product are available.')) ?>
+                </td>
+            </tr>
+            </tbody>
+        <?php endif; ?>
+    </table>
+</div>
+<div id="validation-message-box"></div>
+<?php if ($moduleCheck): ?>
+    <?php if ($_hasAssociatedProducts): ?>
+        <script type="text/x-magento-init">
+             {
+             ".table-wrapper.grouped": {
+                    "quantity":
+                    {
+                        "divSelector": "div.qty-change4",
+                        "increaseBtn": "button.increase-qty",
+                        "decreaseBtn": "button.decrease-qty"
+                    }
+                }
+             }
+
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

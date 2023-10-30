@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.cart.item.renderers.override">
+            <block class="Magento\Checkout\Block\Cart\Item\Renderer" as="default"
+                   template="MageINIC_Quantity::cart/item/default.phtml">
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions"
+                       name="checkout.cart.item.renderers.default.actions" as="actions">
+                    <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Edit"
+                           name="checkout.cart.item.renderers.default.actions.edit"
+                           template="Magento_Checkout::cart/item/renderer/actions/edit.phtml"/>
+                    <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Remove"
+                           name="checkout.cart.item.renderers.default.actions.remove"
+                           template="Magento_Checkout::cart/item/renderer/actions/remove.phtml"/>
+                </block>
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Checkout\Block\Cart\Item\Renderer" as="simple"
+                   template="MageINIC_Quantity::cart/item/default.phtml">
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions"
+                       name="checkout.cart.item.renderers.simple.actions" as="actions">
+                    <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Edit"
+                           name="checkout.cart.item.renderers.simple.actions.edit"
+                           template="Magento_Checkout::cart/item/renderer/actions/edit.phtml"/>
+                    <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Remove"
+                           name="checkout.cart.item.renderers.simple.actions.remove"
+                           template="Magento_Checkout::cart/item/renderer/actions/remove.phtml"/>
+                </block>
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Bundle\Block\Checkout\Cart\Item\Renderer" as="bundle"
+                   template="MageINIC_Quantity::cart/item/default.phtml">
+            <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions"
+                   name="checkout.cart.item.renderers.bundle.actions" as="actions">
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Edit"
+                       name="checkout.cart.item.renderers.bundle.actions.edit"
+                       template="Magento_Checkout::cart/item/renderer/actions/edit.phtml"/>
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Remove"
+                       name="checkout.cart.item.renderers.bundle.actions.remove"
+                       template="Magento_Checkout::cart/item/renderer/actions/remove.phtml"/>
+            </block>
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+                </arguments>
+            </block>
+            <block class="Magento\ConfigurableProduct\Block\Cart\Item\Renderer\Configurable" as="configurable"
+                   template="MageINIC_Quantity::cart/item/default.phtml">
+            <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions"
+                   name="checkout.cart.item.renderers.configurable.actions" as="actions">
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Edit"
+                       name="checkout.cart.item.renderers.configurable.actions.edit"
+                       template="Magento_Checkout::cart/item/renderer/actions/edit.phtml"/>
+                <block class="Magento\Checkout\Block\Cart\Item\Renderer\Actions\Remove"
+                       name="checkout.cart.item.renderers.configurable.actions.remove"
+                       template="Magento_Checkout::cart/item/renderer/actions/remove.phtml"/>
+            </block>
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageINIC\Quantity\ViewModel\Data</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

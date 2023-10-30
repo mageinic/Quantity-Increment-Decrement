@@ -1,0 +1,125 @@
+<?php
+/**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+
+use MageINIC\Quantity\ViewModel\Data;
+use Magento\Framework\Escaper;
+use Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Cart;
+use Magento\Wishlist\Model\Item;
+use Magento\Wishlist\ViewModel\AllowedQuantity;
+
+/**
+ * @var Cart $block
+ * @var Item $item
+ * @var $escaper Escaper
+ */
+
+$item = $block->getItem();
+$product = $item->getProduct();
+/** @var AllowedQuantity $viewModel */
+$viewModel = $block->getData('allowedQuantityViewModel');
+$allowedQty = $viewModel->setItem($item)->getMinMaxQty();
+/** @var $viewModel Data */
+$viewModel = $block->getViewModel();
+?>
+<?php foreach ($block->getChildNames() as $childName): ?>
+    <?= /* @noEscape */ $block->getLayout()->renderElement($childName, false) ?>
+<?php endforeach; ?>
+<div class="box-tocart">
+    <fieldset class="fieldset">
+        <?php if ($item->canHaveQty() && $product->isVisibleInSiteVisibility()): ?>
+            <div class="field qty">
+                <label class="label"
+                       for="qty[<?= $escaper->escapeHtmlAttr($item->getId()) ?>]">
+                    <span>
+                        <?= $escaper->escapeHtml(__('Qty')) ?>
+                    </span>
+                </label>
+                <div class="control">
+                    <?php if ($viewModel->showButtonOnWishListPage()): ?>
+                        <?php $id = "qty_" . $item->getId(); ?>
+                        <div class="qty-controller">
+                            <button type="button" class="decrease-qty1"
+                                  onclick="var result = document.getElementById('<?= $escaper->escapeHtml(__($id)) ?>');
+                                        var qty = result.value; if( !isNaN( qty ) && qty > 1 ) result.value--;
+                                        return false;">
+                                &#45;
+                            </button>
+                            <input type="number"
+                                   data-role="qty" id="<?= $escaper->escapeHtml(__($id)) ?>" class="input-text qty"
+                                   data-validate="{'required-number':true,'validate-greater-than-zero':true,
+                                                   'validate-item-quantity': {
+                                                   'minAllowed':<?= /* @noEscape */ $allowedQty['minAllowed'] ?>,
+                                                    'maxAllowed':<?= /* @noEscape */ $allowedQty['maxAllowed'] ?>
+                                                    }}"
+                                   name="qty[<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                                   value="<?= /* @noEscape */
+                                    $block->getAddToCartQty($item) * 1 ?>"
+                                <?= $product->isSaleable() ? '' : 'disabled="disabled"' ?>
+                            />
+                            <button type="button" class="increase-qty1"
+                                  onclick="var result = document.getElementById('<?= $escaper->escapeHtml(__($id)) ?>');
+                                        var qty = result.value; if( !isNaN( qty )) result.value++; return false;"> &#43;
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <input type="number" data-role="qty" id="qty[<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                               class="input-text qty"
+                               data-validate="{'required-number':true,'validate-greater-than-zero':true,
+                                                'validate-item-quantity':
+                                                {'minAllowed':<?= /* @noEscape */
+                                                $allowedQty['minAllowed'] ?>,
+                                                'maxAllowed':<?= /* @noEscape */
+                                                $allowedQty['maxAllowed'] ?>}}"
+                               name="qty[<?= $escaper->escapeHtmlAttr($item->getId()) ?>]"
+                               value="<?= /* @noEscape */
+                                $block->getAddToCartQty($item) * 1 ?>"
+                            <?= $product->isSaleable() ? '' : 'disabled="disabled"' ?>/>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($product->isSaleable()): ?>
+            <div class="product-item-actions">
+                <div class="actions-primary">
+                    <button type="button" data-role="tocart" data-post='<?= /* @noEscape */
+                    $block->getItemAddToCartParams($item) ?>' title="<?= $escaper->escapeHtmlAttr(__('Add to Cart'
+                    )) ?>" data-item-id="<?= $escaper->escapeHtmlAttr($item->getId()) ?>" class="action tocart primary">
+                        <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                    </button>
+                </div>
+            </div>
+        <?php else: ?>
+            <?php if ($product->getIsSalable()): ?>
+                <p class="available stock" title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>">
+                    <span><?= $escaper->escapeHtml(__('In stock')) ?></span>
+                </p>
+            <?php else: ?>
+                <p class="unavailable stock" title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Out of stock')) ?></span>
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+    </fieldset>
+</div>

@@ -1,0 +1,173 @@
+<?php
+/**
+ * MageINIC
+ * Copyright (C) 2023 MageINIC <support@mageinic.com>
+ *
+ * NOTICE OF LICENSE
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://opensource.org/licenses/gpl-3.0.html.
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category MageINIC
+ * @package MageINIC_Quantity
+ * @copyright Copyright (c) 2023 MageINIC (https://www.mageinic.com/)
+ * @license https://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MageINIC <support@mageinic.com>
+ */
+
+use Magento\Checkout\Block\Cart\Item\Renderer;
+use MageINIC\Quantity\ViewModel\Data;
+use Magento\Framework\Escaper;
+
+/**
+ * @var $block Renderer
+ * @var $viewModel Data
+ * @var $escaper Escaper
+ */
+
+$viewModel = $block->getViewModel();
+$_item = $block->getItem();
+$product = $_item->getProduct();
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+$canApplyMsrp = $viewModel->isShowBeforeOrderConfirm($product) && $viewModel->isMinimalPriceLessMsrp($product);
+$varClass = 'qty-change5';
+?>
+<tbody class="cart item">
+    <tr class="item-info">
+        <td data-th="<?= $escaper->escapeHtml(__('Item')) ?>" class="col item">
+            <?php if ($block->hasProductUrl()): ?>
+            <a href="<?= $block->escapeUrl($block->getProductUrl()) ?>"
+               title="<?= $block->escapeHtml($block->getProductName()) ?>"
+               tabindex="-1"
+               class="product-item-photo">
+                <?php else: ?>
+                <span class="product-item-photo">
+            <?php endif; ?>
+            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+            <?php if ($block->hasProductUrl()): ?>
+            </a>
+        <?php else: ?>
+        <?php endif; ?>
+            <div class="product-item-details">
+                <strong class="product-item-name">
+                    <?php if ($block->hasProductUrl()): ?>
+                        <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>">
+                            <?= $escaper->escapeHtml($block->getProductName()) ?>
+                        </a>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml($block->getProductName()) ?>
+                    <?php endif; ?>
+                </strong>
+                <?php if ($_options = $block->getOptionList()): ?>
+                    <dl class="item-options">
+                        <?php foreach ($_options as $_option): ?>
+                            <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                            <dt><?= $escaper->escapeHtml($_option['label']) ?></dt>
+                            <dd>
+                                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                    <?= $block->escapeHtml($_formatedOptionValue['full_view']) ?>
+                                <?php else: ?>
+                                    <?= $block->escapeHtml($_formatedOptionValue['value'], ['span', 'a']) ?>
+                                <?php endif; ?>
+                            </dd>
+                        <?php endforeach; ?>
+                    </dl>
+                <?php endif; ?>
+                <?php if ($messages = $block->getMessages()): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class="cart item message <?= $block->escapeHtmlAttr($message['type']) ?>">
+                            <div><?= $block->escapeHtml($message['text']) ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock): ?>
+                    <?= $addInfoBlock->setItem($_item)->toHtml() ?>
+                <?php endif; ?>
+            </div>
+        </td>
+        <?php if ($canApplyMsrp): ?>
+            <td class="col msrp" data-th="<?= $escaper->escapeHtml(__('Price')) ?>">
+                <span class="pricing msrp">
+                    <span class="msrp notice">
+                        <?= $escaper->escapeHtml(__('See price before order confirmation.')) ?>
+                    </span>
+                    <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
+                    <a href="#" class="action help map"
+                       id="<?= ($block->escapeHtmlAttr($helpLinkId)) ?>"
+                       data-mage-init='{"addToCart":{
+                                         "helpLinkId": "#<?= $block->escapeJs($block->escapeHtml($helpLinkId)) ?>",
+                                         "productName": "<?= $block->escapeJs($block->escapeHtml($product->getName()
+                                           )) ?>",
+                                         "showAddToCart": false
+                                         }
+                                        }'>
+                        <span><?= $escaper->escapeHtml(__("What's this?")) ?></span>
+                    </a>
+                </span>
+            </td>
+        <?php else: ?>
+            <td class="col price" data-th="<?= $escaper->escapeHtml(__('Price')) ?>">
+                <?= $block->getUnitPriceHtml($_item) ?>
+            </td>
+        <?php endif; ?>
+        <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty')) ?>" style="width: 141px">
+            <div class="field qty">
+                <label class="label"
+                       for="cart-<?= $block->escapeHtml($_item->getId()) ?>-qty">
+                    <span><?= $escaper->escapeHtml(__('Qty')) ?></span>
+                </label>
+                <div class="qty-controller">
+                    <div class="<?= $escaper->escapeHtml($varClass) ?>">
+                        <?php if ($viewModel->getModuleEnable()): ?>
+                            <?php if ($viewModel->showButtonOnCart()): ?>
+                                <button type="button" class="decrease-qty">
+                                    &#45;
+                                </button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <input id="cart-<?= $block->escapeHtml($_item->getId()) ?>-qty"
+                               name="cart[<?= $block->escapeHtml($_item->getId()) ?>][qty]"
+                               data-cart-item-id="<?= $block->escapeHtml($_item->getSku()) ?>"
+                               value="<?= $block->escapeHtml($block->getQty()) ?>"
+                               type="number"
+                               size="4"
+                               title="<?= $escaper->escapeHtml(__('Qty')) ?>"
+                               class="input-text qty"
+                               data-validate="{required:true,'validate-greater-than-zero':true}"
+                               data-role="cart-item-qty"/>
+                        <?php if ($viewModel->getModuleEnable()): ?>
+                            <?php if ($viewModel->showButtonOnCart()): ?>
+                                <button type="button" class="increase-qty">
+                                    &#43;
+                                </button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="col subtotal" data-th="<?= $escaper->escapeHtml(__('Subtotal')) ?>">
+            <?php if ($canApplyMsrp): ?>
+                <span class="cart msrp subtotal">--</span>
+            <?php else: ?>
+                <?= $block->getRowTotalHtml($_item) ?>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <tr class="item-actions">
+        <td colspan="4">
+            <div class="actions-toolbar">
+                <?= /* @noEscape */ $block->getActions($_item) ?>
+            </div>
+        </td>
+    </tr>
+</tbody>
