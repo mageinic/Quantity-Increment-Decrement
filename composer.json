@@ -1,6 +1,6 @@
 {
     "name": "mageinic/quantity",
-    "description": "Quantity Increment Decrement by MageINIC.The Quantity Increment Decrement extension simplifies quantity adjustments for users. It offers intuitive "+" and "-" buttons on various pages. Users can easily increase or decrease quantities on listing, detail, cart, checkout, related products, cross-sell, up-sell, wishlist, compare, and widget pages.",
+    "description": "Quantity Increment Decrement by MageINIC.The Quantity Increment Decrement extension simplifies quantity adjustments for users. It offers intuitive + and - buttons on various pages. Users can easily increase or decrease quantities on listing, detail, cart, checkout, related products, cross-sell, up-sell, wishlist, compare, and widget pages.",
     "require": {
         "php": "^8.0",
         "mageinic/core": ">=1.0.0",
