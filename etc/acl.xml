@@ -30,9 +30,9 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="MageINIC_Core::core">
-                    <resource id="MageINIC_Quantity::quantity" title="Quantity" translate="title" sortOrder="1">
+                    <resource id="MageINIC_Quantity::quantity" title="Quantity" translate="title" sortOrder="10">
                         <resource id="MageINIC_Quantity::quantityconfig" title="Configuration"
-                                  translate="title" sortOrder="2"/>
+                                  translate="title" sortOrder="20"/>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">

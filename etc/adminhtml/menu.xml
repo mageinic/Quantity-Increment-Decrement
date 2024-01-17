@@ -28,9 +28,9 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <menu>
         <add id="MageINIC_Quantity::quantity" translate="title" title="Quantity" module="MageINIC_Quantity"
-             sortOrder="30" parent="MageINIC_Core::core" resource="MageINIC_Quantity::quantity"/>
+             sortOrder="1000" parent="MageINIC_Core::core" resource="MageINIC_Quantity::quantity"/>
         <add
-            id="MageINIC_Quantity::quantityconfig" translate="title" module="MageINIC_Quantity" sortOrder="20"
+            id="MageINIC_Quantity::quantityconfig" translate="title" module="MageINIC_Quantity" sortOrder="2000"
             title="Configuration" parent="MageINIC_Quantity::quantity"
             resource="MageINIC_Quantity::config" action="adminhtml/system_config/edit/section/qty_increase_decrease"/>
     </menu>
